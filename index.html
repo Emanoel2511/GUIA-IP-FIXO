@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta IP</title>
+  <style>
+    body { font-family: Arial; background:#0f172a; color:#fff; padding:20px;}
+    .box { background:#1e293b; padding:20px; border-radius:10px; max-width:500px;}
+    input, select, button {
+      width:100%; padding:10px; margin-top:10px;
+      border-radius:8px; border:none;
+    }
+    button { background:#22c55e; color:#000; font-weight:bold; cursor:pointer;}
+    .result { margin-top:20px; background:#111827; padding:15px; border-radius:8px;}
+  </style>
+</head>
+<body>
+
+<h2>Consulta IP / Rede</h2>
+
+<div class="box">
+  <label>IP:</label>
+  <input type="text" id="ip" placeholder="Ex: 201.6.100.151">
+
+  <label>Tipo:</label>
+  <select id="tipo">
+    <option value="DOCSIS">DOCSIS</option>
+    <option value="GPON">GPON</option>
+  </select>
+
+  <label>Cidade:</label>
+  <select id="cidade"></select>
+
+  <button onclick="calcular()">Consultar</button>
+
+  <div class="result" id="resultado"></div>
+</div>
+
+script.js
+</body>
+</html>
