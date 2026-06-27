@@ -1,28 +1,28 @@
 const dns1 = "181.213.132.2";
 const dns2 = "181.213.132.3";
 
-// Lista de cidades
 const cidades = [
-  "DIADEMA","MAUA","SANTO ANDRÉ","SÃO BERNARDO DO CAMPO","SÃO CAETANO DO SUL",
-  "SÃO PAULO","GUARULHOS","ITU","JUNDIAI","POA","SUZANO",
-  "BARUERI","CARAPICUIBA","COTIA","EMBU DAS ARTES","ITAPECERICA DA SERRA",
-  "ITAPEVI","JANDIRA","OSASCO","SANTANA DO PARNAIBA","TABOÃO DA SERRA","VARGEM GRANDE PAULISTA",
-  "TIETE","MOGI DAS CRUZES","CAPIVARI","ELIAS FAUSTO","MONTE MOR","PORTO FELIZ","RAFARD","SALTO",
-  "ATIBAIA","BRAGANÇA"
+"DIADEMA","MAUA","SANTO ANDRÉ","SÃO BERNARDO DO CAMPO","SÃO CAETANO DO SUL",
+"SÃO PAULO","GUARULHOS","ITU","JUNDIAI","POA","SUZANO",
+"BARUERI","CARAPICUIBA","COTIA","EMBU DAS ARTES","ITAPECERICA DA SERRA",
+"ITAPEVI","JANDIRA","OSASCO","SANTANA DO PARNAIBA","TABOÃO DA SERRA","VARGEM GRANDE PAULISTA",
+"TIETE","MOGI DAS CRUZES","CAPIVARI","ELIAS FAUSTO","MONTE MOR","PORTO FELIZ","RAFARD","SALTO",
+"ATIBAIA","BRAGANÇA"
 ];
 
-// Popular cidades
-const selectCidade = document.getElementById("cidade");
-cidades.forEach(c => {
-  let op = document.createElement("option");
-  op.value = c;
-  op.text = c;
-  selectCidade.appendChild(op);
-});
+window.onload = function () {
+  const selectCidade = document.getElementById("cidade");
 
-// Função cálculo simples gateway/máscara
+  cidades.forEach(c => {
+    let op = document.createElement("option");
+    op.value = c;
+    op.text = c;
+    selectCidade.appendChild(op);
+  });
+};
+
 function calcular() {
-  let ip = document.getElementById("ip").value;
+  let ip = document.getElementById("ip").value.trim();
   let cidade = document.getElementById("cidade").value;
   let tipo = document.getElementById("tipo").value;
 
@@ -34,18 +34,17 @@ function calcular() {
   let mascara = "";
   let gateway = "";
 
-  // REGRA PRINCIPAL
   if (cidade === "SÃO PAULO") {
     if (tipo === "DOCSIS") {
-      mascara = "255.255.255.0 (/24)";
-      gateway = ip.split('.').slice(0,3).join('.') + ".1";
+      mascara = "255.255.255.0";
+      gateway = gerarGateway24(ip);
     } else {
-      mascara = "255.255.255.252 (/30)";
-      gateway = calcularGateway30(ip);
+      mascara = "255.255.255.252";
+      gateway = gerarGateway30(ip);
     }
   } else {
     mascara = "255.255.255.0";
-    gateway = ip.split('.').slice(0,3).join('.') + ".1";
+    gateway = gerarGateway24(ip);
   }
 
   document.getElementById("resultado").innerHTML = `
@@ -58,11 +57,15 @@ function calcular() {
   `;
 }
 
-// cálculo /30
-function calcularGateway30(ip) {
-  let partes = ip.split('.');
-  let ultimo = parseInt(partes[3]);
+function gerarGateway24(ip) {
+  let p = ip.split('.');
+  return `${p[0]}.${p[1]}.${p[2]}.1`;
+}
+
+function gerarGateway30(ip) {
+  let p = ip.split('.');
+  let ultimo = parseInt(p[3]);
 
   let base = Math.floor(ultimo / 4) * 4;
-  return partes[0]+"."+partes[1]+"."+partes[2]+"."+(base+1);
+  return `${p[0]}.${p[1]}.${p[2]}.${base + 1}`;
 }
